@@ -1,22 +1,24 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from '../components/layouts/MainLayout';
-import HomePage from '../pages/public/HomePage'; // <--- Importamos la nueva Home
+import HomePage from '../pages/public/HomePage';
+import CartPage from '../pages/public/CartPage'; // <--- 1. Importar
 
-// Componentes temporales (Placeholder)
+// Componente temporal para Productos (lo haremos después)
 const Productos = () => <div className="container mt-5"><h1>Catálogo Completo</h1></div>;
-const Carrito = () => <div className="container mt-5"><h1>Carrito de Compras</h1></div>;
 
 export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
         <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} /> {/* <--- Usamos el componente real */}
+          <Route path="/" element={<HomePage />} />
           <Route path="/productos" element={<Productos />} />
-          <Route path="/carrito" element={<Carrito />} />
           
-          {/* Rutas pendientes (placeholders) */}
+          {/* 2. Usar el componente CartPage aquí 👇 */}
+          <Route path="/carrito" element={<CartPage />} />
+          
+          {/* Rutas pendientes */}
           <Route path="/nosotros" element={<div className="container mt-5"><h1>Nosotros</h1></div>} />
           <Route path="/blog" element={<div className="container mt-5"><h1>Blog</h1></div>} />
           <Route path="/contacto" element={<div className="container mt-5"><h1>Contacto</h1></div>} />

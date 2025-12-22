@@ -1,9 +1,12 @@
+
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+
+// Layouts
 import MainLayout from '../components/layouts/MainLayout';
 import AdminLayout from '../layouts/AdminLayout';
 
-// --- PÁGINAS PÚBLICAS ---
+// --- PÁGINAS PÚBLICAS (Clientes) ---
 import HomePage from '../pages/public/HomePage';
 import CatalogPage from '../pages/public/CatalogPage';
 import ProductDetailPage from '../pages/public/ProductDetailPage';
@@ -15,15 +18,18 @@ import BlogDetailPage from '../pages/public/BlogDetailPage';
 import LoginPage from '../pages/public/LoginPage';
 import RegisterPage from '../pages/public/RegisterPage';
 
-// --- PÁGINAS DE ADMIN ---
+// --- PÁGINAS DE ADMINISTRACIÓN (Privadas) ---
 import AdminDashboard from '../pages/admin/AdminDashboard';
+import AdminProducts from '../pages/admin/AdminProducts'; // <--- Nueva importación
+import AdminUsers from '../pages/admin/AdminUsers'; // <--- Nuevo
 
 export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
+        
         {/* =========================================
-            RUTAS PÚBLICAS (Cliente)
+            ZONA PÚBLICA (Cualquiera puede entrar)
            ========================================= */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<HomePage />} />
@@ -42,21 +48,23 @@ export const AppRouter = () => {
         </Route>
 
         {/* =========================================
-            RUTAS PRIVADAS (Administrador)
+            ZONA PRIVADA (Solo Admins)
            ========================================= */}
         <Route path="/admin" element={<AdminLayout />}>
-          {/* Dashboard Principal */}
+          {/* Dashboard (Se ve al entrar a /admin) */}
           <Route index element={<AdminDashboard />} />
           
-          {/* Aquí agregaremos las tablas de gestión más adelante */}
-          <Route path="productos" element={<div className="p-4"><h1>Gestión de Productos (Pendiente)</h1></div>} />
-          <Route path="usuarios" element={<div className="p-4"><h1>Gestión de Usuarios (Pendiente)</h1></div>} />
-        </Route>
+          {/* Gestión de Inventario */}
+          <Route path="productos" element={<AdminProducts />} />
+          
+          {/* Gestión de Usuarios (Aún pendiente) */}
+          <Route path="usuarios" element={<AdminUsers />} />        </Route>
         
         {/* =========================================
-            Ruta 404 (Fallback)
+            RUTAS NO ENCONTRADAS (404)
            ========================================= */}
         <Route path="*" element={<Navigate to="/" />} />
+
       </Routes>
     </BrowserRouter>
   );

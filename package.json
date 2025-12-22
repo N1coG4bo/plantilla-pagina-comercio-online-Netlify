@@ -1,4 +1,5 @@
 {
+  "homepage": "https://TU_USUARIO_GITHUB.github.io/NOMBRE_DE_TU_REPO",
   "name": "plantilla-pagina-comercio-online",
   "version": "0.1.0",
   "private": true,
@@ -39,5 +40,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0"
   }
 }

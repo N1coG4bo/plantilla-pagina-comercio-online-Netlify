@@ -1,70 +1,91 @@
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Table, Button, Badge, Container, Image } from 'react-bootstrap';
+import { getProducts } from '../../services/productService'; 
 
-// Layouts
-import MainLayout from '../components/layouts/MainLayout';
-import AdminLayout from '../layouts/AdminLayout';
+const AdminProducts = () => {
+  const [products, setProducts] = useState([]);
 
-// --- PÁGINAS PÚBLICAS (Clientes) ---
-import HomePage from '../pages/public/HomePage';
-import CatalogPage from '../pages/public/CatalogPage';
-import ProductDetailPage from '../pages/public/ProductDetailPage';
-import CartPage from '../pages/public/CartPage';
-import AboutPage from '../pages/public/AboutPage';
-import ContactPage from '../pages/public/ContactPage';
-import BlogPage from '../pages/public/BlogPage';
-import BlogDetailPage from '../pages/public/BlogDetailPage';
-import LoginPage from '../pages/public/LoginPage';
-import RegisterPage from '../pages/public/RegisterPage';
+  // Cargar productos al iniciar
+  useEffect(() => {
+    getProducts().then(data => setProducts(data));
+  }, []);
 
-// --- PÁGINAS DE ADMINISTRACIÓN (Privadas) ---
-import AdminDashboard from '../pages/admin/AdminDashboard';
-import AdminProducts from '../pages/admin/AdminProducts'; // <--- Nueva importación
+  // Función simulada para eliminar
+  const handleDelete = (code) => {
+    if (window.confirm(`¿Estás seguro de eliminar el producto ${code}?`)) {
+      setProducts(products.filter(p => p.code !== code));
+      alert('Producto eliminado (simulación local)');
+    }
+  };
 
-export const AppRouter = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        
-        {/* =========================================
-            ZONA PÚBLICA (Cualquiera puede entrar)
-           ========================================= */}
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/productos" element={<CatalogPage />} />
-          <Route path="/producto/:code" element={<ProductDetailPage />} />
-          <Route path="/carrito" element={<CartPage />} />
-          
-          <Route path="/nosotros" element={<AboutPage />} />
-          <Route path="/contacto" element={<ContactPage />} />
-          
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/blog/:id" element={<BlogDetailPage />} />
-          
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/registro" element={<RegisterPage />} />
-        </Route>
+    <Container className="py-4">
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="fw-bold text-dark">Inventario de Productos</h2>
+        <Button variant="success">
+          + Nuevo Producto
+        </Button>
+      </div>
 
-        {/* =========================================
-            ZONA PRIVADA (Solo Admins)
-           ========================================= */}
-        <Route path="/admin" element={<AdminLayout />}>
-          {/* Dashboard (Se ve al entrar a /admin) */}
-          <Route index element={<AdminDashboard />} />
-          
-          {/* Gestión de Inventario */}
-          <Route path="productos" element={<AdminProducts />} />
-          
-          {/* Gestión de Usuarios (Aún pendiente) */}
-          <Route path="usuarios" element={<div className="p-4"><h1>Gestión de Usuarios (Próximamente)</h1></div>} />
-        </Route>
-        
-        {/* =========================================
-            RUTAS NO ENCONTRADAS (404)
-           ========================================= */}
-        <Route path="*" element={<Navigate to="/" />} />
-
-      </Routes>
-    </BrowserRouter>
+      <div className="card border-0 shadow-sm">
+        <div className="card-body p-0">
+          <Table hover responsive className="mb-0 align-middle">
+            <thead className="bg-light">
+              <tr>
+                <th className="ps-4">Producto</th>
+                <th>Código</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Stock</th>
+                <th className="text-end pe-4">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((prod) => (
+                <tr key={prod.code}>
+                  <td className="ps-4">
+                    <div className="d-flex align-items-center">
+                      <Image 
+                        src={`/${prod.img}`} 
+                        rounded 
+                        style={{ width: '40px', height: '40px', objectFit: 'cover' }} 
+                        className="me-3"
+                      />
+                      <span className="fw-bold">{prod.nombre}</span>
+                    </div>
+                  </td>
+                  <td><Badge bg="secondary" className="fw-normal">{prod.code}</Badge></td>
+                  <td>
+                    {prod.code.startsWith('FR') && <Badge bg="success">Fruta</Badge>}
+                    {prod.code.startsWith('VR') && <Badge bg="info">Verdura</Badge>}
+                    {!prod.code.startsWith('FR') && !prod.code.startsWith('VR') && <Badge bg="warning" text="dark">Otro</Badge>}
+                  </td>
+                  <td>${prod.precio}</td>
+                  <td>
+                    {prod.stock > 20 ? (
+                      <span className="text-success fw-bold">{prod.stock} u.</span>
+                    ) : (
+                      <span className="text-danger fw-bold">{prod.stock} u. (Bajo)</span>
+                    )}
+                  </td>
+                  <td className="text-end pe-4">
+                    <Button variant="link" className="text-primary p-0 me-3">✏️</Button>
+                    <Button 
+                      variant="link" 
+                      className="text-danger p-0"
+                      onClick={() => handleDelete(prod.code)}
+                    >
+                      🗑️
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </div>
+      </div>
+    </Container>
   );
 };
+
+export default AdminProducts;

@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
-import { Card, Button, Badge } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import { CartContext } from '../../context/CartContext';
+import { Card, Button, Badge } from 'react-bootstrap'; //
+import { Link } from 'react-router-dom'; //
+import { CartContext } from '../../context/CartContext'; //
+import { motion } from 'framer-motion';
 
 const ProductCard = ({ product }) => {
   // Desestructuramos las propiedades del producto para usarlas fácilmente
@@ -24,8 +25,12 @@ const ProductCard = ({ product }) => {
   return (
     <div className="col-12 col-sm-6 col-lg-4 mb-4">
       <Card className="h-100 shadow-sm border-0 product-card">
-        {/* Contenedor de la imagen con tamaño fijo */}
-        <div style={{ position: 'relative', height: '200px', overflow: 'hidden' }}>
+        {/* Contenedor de la imagen animado con Motion */}
+        <motion.div 
+          style={{ position: 'relative', height: '200px', overflow: 'hidden' }}
+          whileHover={{ scale: 1.05 }} // Zoom suave al pasar el mouse
+          transition={{ duration: 0.3 }}
+        >
           <Card.Img 
             variant="top" 
             src={`/${img}`} 
@@ -46,7 +51,7 @@ const ProductCard = ({ product }) => {
               Agotado
             </Badge>
           )}
-        </div>
+        </motion.div>
 
         <Card.Body className="d-flex flex-column">
           {/* Fila superior: Código del producto */}
@@ -80,15 +85,17 @@ const ProductCard = ({ product }) => {
               Ver Detalle
             </Link>
             
-            <Button 
-              variant="success" 
+            {/* Botón animado con Motion */}
+            <motion.button 
+              className="btn btn-success d-flex align-items-center justify-content-center gap-2"
               disabled={sinStock}
               onClick={() => addToCart(product)}
-              className="d-flex align-items-center justify-content-center gap-2"
+              whileTap={{ scale: 0.95 }} // Efecto de presión al hacer clic
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
               <span>Añadir al Carrito</span>
               <span>🛒</span>
-            </Button>
+            </motion.button>
           </div>
         </Card.Body>
       </Card>
